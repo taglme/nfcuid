@@ -36,5 +36,5 @@ go build
 ```
 
 ## Demo
-View how it works  
+You can see how it works in this video 
 https://www.youtube.com/watch?v=38UCCXbQPL0
