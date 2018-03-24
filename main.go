@@ -2,70 +2,116 @@ package main
 
 import (
 	"fmt"
-	"log"
-	"time"
+	"os"
 
-	"github.com/fuzxxl/nfc"
+	"github.com/ebfe/scard"
 	"github.com/taglme/string2keyboard"
 )
 
-func main() {
-	var devices []string
-	var err error
-	var reader nfc.Device
-	var information string
-	var nfcTarget *nfc.ISO14443aTarget
-	var target []nfc.Target
-	var uid string
+func errorExit(err error) {
+	fmt.Println(err)
+	os.Exit(1)
+}
 
-	res := nfc.Version()
-	fmt.Printf("Using libnfc version: %s\n", res)
-	devices, err = nfc.ListDevices()
-	if err != nil {
-		log.Fatal(err)
+func waitUntilCardPresent(ctx *scard.Context, readers []string) (int, error) {
+	rs := make([]scard.ReaderState, len(readers))
+	for i := range rs {
+		rs[i].Reader = readers[i]
+		rs[i].CurrentState = scard.StateUnaware
 	}
-	fmt.Printf("Found devices: \n %s", devices[0])
-	reader, err = nfc.Open(devices[0])
-	if err != nil {
-		log.Fatal(err)
-	}
-	information, err = reader.Information()
 
-	if err != nil {
-		log.Fatal(err)
+	for {
+		for i := range rs {
+			if rs[i].EventState&scard.StatePresent != 0 {
+				return i, nil
+			}
+			rs[i].CurrentState = rs[i].EventState
+		}
+		err := ctx.GetStatusChange(rs, -1)
+		if err != nil {
+			return -1, err
+		}
 	}
-	fmt.Printf("\nInformation about reader: %s\n", information)
-	modul := nfc.Modulation{nfc.ISO14443a, nfc.Nbr106}
+}
+
+func waitUntilCardRelease(ctx *scard.Context, readers []string, index int) error {
+	rs := make([]scard.ReaderState, 1)
+
+	rs[0].Reader = readers[index]
+	rs[0].CurrentState = scard.StatePresent
 
 	for {
 
-		fmt.Printf("Wait for tag ...\n")
-		for {
-
-			target, err = reader.InitiatorListPassiveTargets(modul)
-			if err != nil {
-				log.Fatal(err)
-			}
-			if len(target) == 0 {
-				time.Sleep(100 * time.Millisecond)
-			} else {
-				break
-			}
-
+		if rs[0].EventState&scard.StateEmpty != 0 {
+			return nil
 		}
-		nfcTarget = target[0].(*nfc.ISO14443aTarget)
-		uid = string(nfcTarget.UID[:nfcTarget.UIDLen])
-		uidS := fmt.Sprintf("%x", uid)
-		fmt.Printf(" Tag UID is: %s\n", uidS)
-		fmt.Printf("Writting as keyboard input...")
-		string2keyboard.KeyboardWrite(uidS)
-		fmt.Printf("Done.\n")
+		rs[0].CurrentState = rs[0].EventState
 
+		err := ctx.GetStatusChange(rs, -1)
+		if err != nil {
+			return err
+		}
+	}
+}
+
+func main() {
+
+	// Establish a context
+	ctx, err := scard.EstablishContext()
+	if err != nil {
+		errorExit(err)
+	}
+	defer ctx.Release()
+
+	// List available readers
+	readers, err := ctx.ListReaders()
+	if err != nil {
+		errorExit(err)
 	}
 
-	err = reader.Close()
-	if err != nil {
-		log.Fatal(err)
+	fmt.Printf("Found %d readers:\n", len(readers))
+	for i, reader := range readers {
+		fmt.Printf("[%d] %s\n", i, reader)
+	}
+
+	if len(readers) > 0 {
+		for {
+			fmt.Println("Waiting for a Card")
+			index, err := waitUntilCardPresent(ctx, readers)
+			if err != nil {
+				errorExit(err)
+			}
+
+			// Connect to card
+			fmt.Println("Connecting to card in ", readers[index])
+			card, err := ctx.Connect(readers[index], scard.ShareExclusive, scard.ProtocolAny)
+			if err != nil {
+				errorExit(err)
+			}
+			defer card.Disconnect(scard.ResetCard)
+
+			var cmd = []byte{0xFF, 0xCA, 0x00, 0x00, 0x00}
+
+			rsp, err := card.Transmit(cmd)
+			if err != nil {
+				errorExit(err)
+			}
+			uid := string(rsp[0:7])
+			uidS := fmt.Sprintf("%x", uid)
+			fmt.Printf("Tag UID is: %s\n", uidS)
+			fmt.Printf("Writting as keyboard input...")
+			string2keyboard.KeyboardWrite(uidS)
+			fmt.Printf("Done.\n")
+
+			card.Disconnect(scard.ResetCard)
+
+			//Wait while card will be released
+			fmt.Print("Waiting for card release...")
+			err = waitUntilCardRelease(ctx, readers, index)
+			fmt.Println("Card released.")
+
+		}
+
 	}
 
 }
