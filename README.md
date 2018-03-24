@@ -2,10 +2,10 @@
 nfcUID - terminal program for reading NFC tag UID by NFC reader and write it as keyboard output.
 
 ## Tech
-Program used Go bindings to the PC/SC API. 
-https://github.com/ebfe/scard
-It is works with ACS readers through their PC/SC driver. So driver should be installed first.
-You can find driver in manufacturer site https://www.acs.com.hk/
+Program used Go bindings to the PC/SC API.  
+https://github.com/ebfe/scard  
+It is works with ACS readers through their PC/SC driver. So driver should be installed first.  
+You can find driver in manufacturer site https://www.acs.com.hk/  
 
 ## Supported readers
 Program tested with readers:
@@ -35,3 +35,6 @@ To build your own binary just clone repo and use golang build command
 go build
 ```
 
+## Demo
+View how it works  
+https://www.youtube.com/watch?v=38UCCXbQPL0
