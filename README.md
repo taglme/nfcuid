@@ -34,3 +34,4 @@ To build your own binary just clone repo and use golang build command
 ```
 go build
 ```
+
