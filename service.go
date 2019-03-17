@@ -140,8 +140,12 @@ func (s *service) Start() {
 		uidBytes := rsp[0 : len(rsp)-2]
 		fmt.Printf("UID is: % x\n", uidBytes)
 		fmt.Printf("Writting as keyboard input...")
-		string2keyboard.KeyboardWrite(s.formatOutput(uidBytes))
-		fmt.Printf("Done\n")
+		err = string2keyboard.KeyboardWrite(s.formatOutput(uidBytes))
+		if err != nil {
+			fmt.Printf("Could write as keyboard output. Error: %s\n", err.Error())
+		} else {
+			fmt.Printf("Success!\n")
+		}
 
 		card.Disconnect(scard.ResetCard)
 
