@@ -1,6 +1,5 @@
 # nfcUID
-Console application for reading NFC tag UID by NFC reader and write it as keyboard output.
-
+Cross-platform terminal application for reading NFC tag UID and write it as keyboard output to text field in any application.
 
 ## Overview
 Application read NFC tag UID using PC/SC API.
@@ -23,19 +22,17 @@ Application should work with any NFC tag with UID. It is tested with NXP tags:
   - NTAG213
   - NTAG216
 
-## Install
-
-```golang
-go get github.com/taglme/nfcuid
-```
+## Download
+Binaries for Windows, MacOS and Linux platforms could be downloaded from release page.
 
 ## Build
-
+Install the source code and build
 ```golang
+go get github.com/taglme/nfcuid
 go build
 ```
 
-## Flags
+## Output format
 
 There are options for application that should be specified as flags.
 
@@ -44,11 +41,11 @@ There are options for application that should be specified as flags.
  - '-decimal' (boolean) - UID output in decimal format
  - '-reverse' (boolean) - UID output in reverse order
  - '-end-char' (string) - character at the end of UID. Options: 'hyphen', 'enter', 'semicolon', 'colon', 'comma', 'none', 'space', 'tab',  (default "none")
- - '-int-char' (string) - character between bytes of UID. Options: 'hyphen', 'enter', 'semicolon', 'colon', 'comma', 'none', 'space', 'tab',  (default "none")
+ - '-in-char' (string) - character between bytes of UID. Options: 'hyphen', 'enter', 'semicolon', 'colon', 'comma', 'none', 'space', 'tab',  (default "none")
 
 Run with '-h' flag to check usage
 ```
-nfcUID -h
+nfcuid -h
 ```
 
 ## Examples
@@ -59,9 +56,15 @@ nfcUID -h
 //Bytes of UID will be in hex format
 //Between bytes of UID will be hyphen ("-") printed
 //At end of UID newline will be printed
-nfcUID -end-char=enter -in-char=hyphen -caps-lock=false -reverse=false -decimal=false -device=1
+nfcuid -end-char=enter -in-char=hyphen -caps-lock=false -reverse=false -decimal=false -device=1
 
 //Output 
 04-ae-65-ca-82-49-80
 
 ```
+
+## Demo
+Short application [overview video](https://youtu.be/BSyxhg2iWfA) (in Russian) on Youtube
+
+## More NFC software
+More NFC software and services are available on [Tagl.me](https://tagl.me)
