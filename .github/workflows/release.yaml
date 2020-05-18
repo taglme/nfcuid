@@ -25,7 +25,7 @@ jobs:
         with:
           go-version: 1.14.x
       - name: Install libs
-        run: sudo apt-get install -y libpcsclite-dev libpcsclite1 pcscd gobjc++-mingw-w64
+        run: apt-get install -y libpcsclite-dev libpcsclite1 pcscd gobjc++-mingw-w64 gobjc++
       -
         name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v1
