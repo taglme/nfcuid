@@ -1,17 +1,16 @@
 name: release
 
-on: push
-#  push:
-#    branches:
-#      - "!*"
-#    tags:
-#      - "v*.*.*"
+on:
+  push:
+    branches:
+      - "!*"
+    tags:
+      - "v*.*.*"
 
 jobs:
   goreleaser:
     runs-on: ubuntu-latest
     container: mailchain/goreleaser-xcgo
-    #container: bepsays/ci-goreleaser
     steps:
       -
         name: Checkout
@@ -25,7 +24,6 @@ jobs:
         with:
           go-version: 1.14.x
       - name: Install libs
-        #gobjc++-mingw-w64 gobjc++
         run: apt-get install -y libpcsclite-dev libpcsclite1 pcscd 
       -
         name: Run GoReleaser
