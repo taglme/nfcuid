@@ -108,7 +108,7 @@ func (s *service) Start() {
 
 		//Connect to card
 		fmt.Println("Connecting to card...")
-		card, err := ctx.Connect(selectedReaders[index], scard.ShareExclusive, scard.ProtocolAny)
+		card, err := ctx.Connect(selectedReaders[index], scard.ShareShared, scard.ProtocolAny)
 		if err != nil {
 			errorExit(err)
 		}
