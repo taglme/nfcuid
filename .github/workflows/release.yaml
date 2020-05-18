@@ -10,8 +10,8 @@ on: push
 jobs:
   goreleaser:
     runs-on: ubuntu-latest
-    #container: mailchain/goreleaser-xcgo
-    container: bepsays/ci-goreleaser
+    container: mailchain/goreleaser-xcgo
+    #container: bepsays/ci-goreleaser
     steps:
       -
         name: Checkout
