@@ -1,0 +1,6 @@
+github.com/ebfe/scard v0.0.0-20190212122703-c3d1b1916a95 h1:OM0MnUcXBysj7ZtXvThVWHMoahuKQ8FuwIdeSLcNdP4=
+github.com/ebfe/scard v0.0.0-20190212122703-c3d1b1916a95/go.mod h1:8hHvF8DlEq5kE3KWOsZQezdWq1OTOVxZArZMscS954E=
+github.com/micmonay/keybd_event v1.1.0 h1:fQzkqiG/Siwji1Ju9NDkIb8FSFFlPU76YbJntrXdtQw=
+github.com/micmonay/keybd_event v1.1.0/go.mod h1:QS2Kfz0PbPezFqMPEot+l/cK78/tHLZtZ7AbYUCRKsQ=
+github.com/taglme/string2keyboard v0.0.0-20190317231536-45ba78797368 h1:8RASeTus7O97xn1yBltSjFZJcLDT8tFmeRQEBTvhoV4=
+github.com/taglme/string2keyboard v0.0.0-20190317231536-45ba78797368/go.mod h1:jTrad2xtVdS9K6UfyWJcJ39D0b3U13u4EX0esoaGisY=
