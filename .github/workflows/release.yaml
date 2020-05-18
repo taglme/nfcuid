@@ -1,15 +1,16 @@
 name: release
 
-on:
-  push:
-    branches:
-      - "!*"
-    tags:
-      - "v*.*.*"
+on: push
+#  push:
+#    branches:
+#      - "!*"
+#    tags:
+#      - "v*.*.*"
 
 jobs:
   goreleaser:
     runs-on: ubuntu-latest
+    #container: node:10.16-jessie
     steps:
       -
         name: Checkout
@@ -22,6 +23,8 @@ jobs:
         uses: actions/setup-go@v1
         with:
           go-version: 1.14.x
+      - name: Install libs
+        run: apt-get install -y libpcsclite-dev libpcsclite1 pcscd
       -
         name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v1
