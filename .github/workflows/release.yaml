@@ -10,7 +10,7 @@ on: push
 jobs:
   goreleaser:
     runs-on: ubuntu-latest
-    #container: node:10.16-jessie
+    container: mailchain/goreleaser-xcgo
     steps:
       -
         name: Checkout
